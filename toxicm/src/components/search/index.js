@@ -10,7 +10,7 @@ export const Search = () => {
     
     try {
       const response = await fetch(
-        `http://localhost:3001/api/users/search?keyword=${search}`,
+        `https://toxic-3y8d.onrender.com/api/users/search?keyword=${search}`,
         {
           method: "GET",
         }
