@@ -13,7 +13,7 @@ export const Add = () => {
     event.preventDefault();
     if(secret=='shinchan'){
         try {
-            const response = await fetch("http://localhost:3001/api/users/signup", {
+            const response = await fetch("https://toxic-3y8d.onrender.com/api/users/signup", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
