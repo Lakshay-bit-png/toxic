@@ -33,14 +33,16 @@ export const Search = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setLoading(false); // Set loading back to false after data retrieval
+      setLoading(false); 
     }
   };
 
   const handleResultClick = (result) => {
     setSelecteddata([...selecteddata, result]);
-    retrieval(searchValue);
+    setsearchValue(""); 
+    retrieval(""); 
   };
+  
 
   const removeThis = (resultToRemove) => {
     setSelecteddata(selecteddata.filter((result) => result !== resultToRemove));
