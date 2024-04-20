@@ -6,44 +6,35 @@ export const Search = () => {
   const [searcheddata, setsearcheddata] = useState([]);
   const [selecteddata, setSelecteddata] = useState([]);
   const [isadder, setisadder] = useState(false);
-  useEffect(()=>{
-    const retrieval = async (search) => {
+  const retrieval = async (search) => {
     
-      try {
-        const response = await fetch(
-          `https://toxic-3y8d.onrender.com/api/users/search?keyword=${searchValue}`,
-          {
-            method: "GET",
-          }
-        );
-        const searchData = await response.json();
-        if (response.ok) {
-          // Filter out selected items from the searched data
-          const filteredData = searchData.filter(
-            (result) =>
-              !selecteddata.some((selected) => selected._id === result._id)
-          );
-          console.log(filteredData);
-          setsearcheddata(filteredData);
-         
-        } else {
-          console.log(searchData);
+    try {
+      const response = await fetch(
+        `https://toxic-3y8d.onrender.com/api/users/search?keyword=${search}`,
+        {
+          method: "GET",
         }
-      } catch (error) {
-        console.log(error);
+      );
+      const searchData = await response.json();
+      if (response.ok) {
+        // Filter out selected items from the searched data
+        const filteredData = searchData.filter(
+          (result) =>
+            !selecteddata.some((selected) => selected._id === result._id)
+        );
+        console.log(filteredData);
+        setsearcheddata(filteredData);
+      } else {
+        console.log(searchData);
       }
-    };
-    retrieval()
-  
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  },[searchValue,selecteddata])
-  
   const handleResultClick = (result) => {
     setSelecteddata([...selecteddata, result]);
-    setsearchValue("")
-    
-    
-    
+    retrieval(searchValue);
     // Add the clicked result to selectedData
   };
 
@@ -51,7 +42,9 @@ export const Search = () => {
     setSelecteddata(selecteddata.filter((result) => result !== resultToRemove));
   };
 
-  
+  useEffect(() => {
+    retrieval(searchValue);
+  }, [selecteddata]);
   return (
    <>
     <div
@@ -92,7 +85,7 @@ export const Search = () => {
               value={searchValue}
               onChange={(e) => {
                 setsearchValue(e.target.value); // Update searchValue state
-                 // Call the retrieval function
+                retrieval(e.target.value); // Call the retrieval function
               }}
             />
           </div>
