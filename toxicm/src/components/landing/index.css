@@ -13,8 +13,11 @@
     /* background-color: gray; */
     display:flex;
     flex-direction: column;
-    padding:8px;
-    gap:12px;
+    padding:12px;
+    gap:36px;
+    background-color: rgba(217, 217, 217, 0.151);
+    border-radius:4px;
+    backdrop-filter: blur(10px);
 
 }
 
