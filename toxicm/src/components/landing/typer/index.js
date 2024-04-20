@@ -8,8 +8,8 @@ const TypingPlaceholder = () => {
       <Typewriter
         options={{
           strings: ['Search someone in your Space 😜🤫','Locate a random individual',
-          'Find someone special',
-          'Discover a new face',],
+          'Deployed on a Free Server',
+          'The API may take time to be called once '],
           autoStart: true,
           loop: true,
         }}
