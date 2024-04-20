@@ -1,5 +1,5 @@
-<h2>Project is Built on React.js</h2>
+<h2>Project is Built on MERN STACK</h2>
 
-<div>toxic folder contains - backend repo</div>
-<div>toxicm contains - frontend repo</div>
-<h4><TO ADD A NEW USER , A SECRET KEY IS REQUIRED WHICH IS SENT TO YOU IN THE MAIL.</h4>
+<div>Toxic folder contains - Backend Repo</div>
+<div>Toxicm contains - Frontend Repo</div>
+<h4>TO ADD A NEW USER , A SECRET KEY IS REQUIRED WHICH IS SENT TO YOU IN THE MAIL.</h4>
