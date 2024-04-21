@@ -1,109 +1,104 @@
 import React, { useEffect, useState } from 'react';
-import { Circles } from 'react-loader-spinner'; // Import Circles component
-import index from './index.css';
+import { Circles } from 'react-loader-spinner';
 import { RxCross2 } from "react-icons/rx";
+import './index.css'; // Import CSS file
 
 export const Search = () => {
-  const [searchValue, setsearchValue] = useState("");
-  const [searcheddata, setsearcheddata] = useState([]);
-  const [selecteddata, setSelecteddata] = useState([]);
-  const [isadder, setisadder] = useState(false);
-  const [loading, setLoading] = useState(false); // State to track loading
+  const [searchValue, setSearchValue] = useState("");
+  const [searchedData, setSearchedData] = useState([]);
+  const [selectedData, setSelectedData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Debounce function to delay API requests
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+  };
+
+  // Throttle function to limit API requests frequency
+  const throttle = (func, limit) => {
+    let inThrottle;
+    return function (...args) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => (inThrottle = false), limit);
+      }
+    };
+  };
 
   const retrieval = async (search) => {
-    setLoading(true); // Set loading to true before fetching data
+    setLoading(true);
     try {
       const response = await fetch(
         `https://toxic-3y8d.onrender.com/api/users/search?keyword=${search}`,
-        {
-          method: "GET",
-        }
+        { method: "GET" }
       );
       const searchData = await response.json();
       if (response.ok) {
-        const filteredData = searchData.filter(
-          (result) =>
-            !selecteddata.some((selected) => selected._id === result._id)
-        );
-        console.log(filteredData);
-        setsearcheddata(filteredData);
+        setSearchedData(searchData);
       } else {
         console.log(searchData);
       }
     } catch (error) {
       console.log(error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
+  const debouncedRetrieval = debounce(retrieval, 300); // Debounced retrieval function
+
   const handleResultClick = (result) => {
-    setSelecteddata([...selecteddata, result]);
-    setsearchValue(""); 
-    retrieval(""); 
+    setSelectedData([...selectedData, result]);
+    setSearchValue("");
   };
-  
 
   const removeThis = (resultToRemove) => {
-    setSelecteddata(selecteddata.filter((result) => result !== resultToRemove));
+    setSelectedData(selectedData.filter((result) => result !== resultToRemove));
   };
 
   useEffect(() => {
     retrieval(searchValue);
-  }, [selecteddata]);
+  }, [searchValue]);
 
   return (
     <>
-      <div
-        className={
-          selecteddata?.length > 5
-            ? "input-field column-switch"
-            : "input-field"
-        }
-      >
-        <div
-          className={
-            selecteddata?.length > 5
-              ? "saved-results width-change"
-              : "saved-results"
-          }
-        >
-          {selecteddata?.map((result) => (
+      <div className={selectedData.length > 5 ? "input-field column-switch" : "input-field"}>
+        <div className={selectedData.length > 5 ? "saved-results width-change" : "saved-results"}>
+          {selectedData.map((result) => (
             <div className="each-saved" key={result._id}>
               <img className="image" src={result?.imgUrl} alt={`Profile`} />
               <div className="saved-name">{result?.name}</div>
               <RxCross2
                 className="crossed"
-                onClick={() => {
-                  removeThis(result);
-                }}
+                onClick={() => removeThis(result)}
               />
             </div>
           ))}
         </div>
         <input
           type="text"
-          className={
-            selecteddata?.length > 5
-              ? "searcher-input input-change"
-              : "searcher-input"
-          }
+          className={selectedData.length > 5 ? "searcher-input input-change" : "searcher-input"}
           placeholder="Search by Name or Email"
           value={searchValue}
           onChange={(e) => {
-            setsearchValue(e.target.value);
-            retrieval(e.target.value);
+            setSearchValue(e.target.value);
+            debouncedRetrieval(e.target.value); // Use debounced retrieval
           }}
         />
       </div>
 
       {loading ? (
-        <div style={{ textAlign: "center",display:'flex',alignItems:'center',justifyContent:'center' ,height:'400px'}}>
+        <div style={{ textAlign: "center", display: 'flex', alignItems: 'center', justifyContent: 'center', height: '400px' }}>
           <Circles color="cyan" height={100} width={100} />
         </div>
-      ) : searcheddata.length > 0 ? (
+      ) : searchedData.length > 0 ? (
         <div className="search-results">
-          {searcheddata?.map((result) => (
+          {searchedData.map((result) => (
             <div
               key={result._id}
               className="each-result"
